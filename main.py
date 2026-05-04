@@ -18,3 +18,9 @@ app = FastAPI(
 def health_check():
     """Liveness probe — returns OK if the app is running."""
     return {"status": "ok"}
+
+@app.get("/sum")
+def find_sum(a: int, b: int):
+    """Find the sum of two integers."""
+    return {"result": a + b}
+
