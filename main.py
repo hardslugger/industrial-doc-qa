@@ -6,6 +6,7 @@ This is the v0 skeleton — only a /health endpoint for now.
 """
 
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI(
     title="Industrial Doc Q&A",
@@ -24,3 +25,17 @@ def find_sum(a: int, b: int):
     """Find the sum of two integers."""
     return {"result": a + b}
 
+class TextInput(BaseModel):
+    """Schema for /echo request body. Pydantic validates incoming JSON against this."""
+    text: str
+    language: str = "en"  # default value if caller omits it
+
+
+@app.post("/echo")
+def echo_text(payload: TextInput):
+    """Echo input text back with metadata. Demonstrates POST + JSON body validation."""
+    return {
+        "received_text": payload.text,
+        "language": payload.language,
+        "char_count": len(payload.text),
+    }
